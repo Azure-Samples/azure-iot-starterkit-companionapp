@@ -38,7 +38,7 @@ class LaunchScreen extends Component {
           {!this.props.loggedIn && <View style={styles.logoContainer}>
             <Image source={Images.azureLogo} />
             <Text style={[styles.launchTitleText, { marginBottom: 20 }]}>
-              Azure IoT DevKit Companion
+              Azure IoT Starter Kit Companion
             </Text>
           </View>}
           {this.props.loggedIn && <View>
