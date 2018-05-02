@@ -1,0 +1,1 @@
+../../../../ADAL/ADAL/src/urlprotocol/ADNegotiateHandler.h

@@ -1,0 +1,13 @@
+rootProject.name = 'AzureIoTDevKitCompanion'
+include ':react-native-cookies'
+project(':react-native-cookies').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-cookies/android')
+include ':react-native-ssh'
+project(':react-native-ssh').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ssh/android')
+include ':react-native-camera'
+project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
+include ':react-native-ms-adal'
+project(':react-native-ms-adal').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ms-adal/android')
+
+include ':app'

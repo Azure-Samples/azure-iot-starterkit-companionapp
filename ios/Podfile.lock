@@ -1,0 +1,19 @@
+PODS:
+  - ADAL (2.6.1):
+    - ADAL/app-lib (= 2.6.1)
+  - ADAL/app-lib (2.6.1):
+    - ADAL/tokencacheheader
+  - ADAL/tokencacheheader (2.6.1)
+  - NMSSH (2.2.8)
+
+DEPENDENCIES:
+  - ADAL (~> 2.3)
+  - NMSSH (~> 2.2.5)
+
+SPEC CHECKSUMS:
+  ADAL: 1f63f8a2ae0c89c818ba0d8c406bdef698998dd7
+  NMSSH: b722885a07485a2c03ffa3ea56a7b0308dbdc37c
+
+PODFILE CHECKSUM: ae10443654b2712d874002a7816f5acb2847ee6f
+
+COCOAPODS: 1.4.0

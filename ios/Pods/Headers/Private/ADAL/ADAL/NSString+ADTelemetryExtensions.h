@@ -1,0 +1,1 @@
+../../../../ADAL/ADAL/src/utils/NSString+ADTelemetryExtensions.h

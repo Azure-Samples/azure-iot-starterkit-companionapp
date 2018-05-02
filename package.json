@@ -1,0 +1,56 @@
+{
+  "name": "azure-iot-devkit-companion",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "postinstall": "./postinstall.sh"
+  },
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "prop-types": "^15.6.0",
+    "react": "16.0.0",
+    "react-native": "0.50.4",
+    "react-native-camera": "1.0.2",
+    "react-native-cookies": "^3.2.0",
+    "react-native-ms-adal": "^0.4.0",
+    "react-native-qrcode-scanner": "0.0.30",
+    "react-native-ssh": "^1.0.1",
+    "react-native-sshclient": "../react-native-sshclient",
+    "react-native-vector-icons": "4.3.0",
+    "react-native-windows": "0.50.0",
+    "react-navigation": "^1.0.0-beta.21",
+    "react-navigation-redux-helpers": "^1.0.3",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "reduxsauce": "0.7.0",
+    "seamless-immutable": "^7.1.2",
+    "utf8": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-eslint": "7.1.1",
+    "babel-plugin-ignite-ignore-reactotron": "^0.3.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react-native": "^3.0.2",
+    "react-dom": "16.0.0",
+    "rnpm-plugin-windows": "^0.2.8",
+    "standard": "10.0.2"
+  },
+  "config": {},
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "describe",
+      "test",
+      "jest",
+      "expect",
+      "fetch",
+      "navigator",
+      "__DEV__",
+      "XMLHttpRequest",
+      "FormData",
+      "React$Element"
+    ]
+  }
+}
