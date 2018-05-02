@@ -1,6 +1,6 @@
-#  Azure IoT DevKit Companion
+#  Azure IoT Starter Kit Companion
 
-The **Azure IoT DevKit Companion** is a sample React Native application that helps you get your IoT device connected to an IoT Hub on iOS, Android and Windows.
+The **Azure IoT Starter Kit Companion** is a sample React Native application that helps you get your IoT device connected to an IoT Hub on iOS, Android and Windows.
 
 - It will connect your IoT device to a wireless network with Internet access.
 - It will provision resources such as an IoT Hub and IoT Device in Azure.
@@ -37,7 +37,7 @@ For Android devices and Windows, if you have a work or school account, the quick
 - This "react-native-sshclient" repository folder should be at the same directory level as this repository:
 ```
 - Workspace Parent Folder
-  - azure-iot-devkit-companionapp
+  - azure-iot-starterkit-companionapp
   - react-native-sshclient
 ```
 
@@ -69,6 +69,7 @@ A video of the steps is available [here](https://iotcompanionapp.blob.core.windo
 
 #### Running the App
 - Install the dependencies: `yarn install`.
+- In the terminal, run `yarn start` in the `azure-iot-starterkit-companionapp` folder.
 - Click `Run > Run 'app'`
 - In the "Select Deployment Target" screen, select a virtual or connected device and click "OK"
 
