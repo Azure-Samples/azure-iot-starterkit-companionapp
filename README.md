@@ -16,6 +16,8 @@ For Android devices and Windows, if you have a work or school account, the quick
 - Unpack the zip file
 - Run the PowerShell script: `./Add-AppDevPackage.ps`
 
+A video of how to setup the teXXmo IoT button is [here](https://iotcompanionapp.blob.core.windows.net/videos/button_flow.mp4).
+
 ## Getting Started
 
 #### Install tools for your OS
