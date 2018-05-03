@@ -76,6 +76,7 @@ class WifiConnectScreen extends Component {
         echo 'while true; do sleep 5; ping -c1 www.google.com > /dev/null && break; done' >> connect_and_install.sh &&
         echo 'rm sendip_and_install.sh' >> connect_and_install.sh &&
         echo 'sleep 5' >> connect_and_install.sh &&
+        echo 'while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do echo "waiting for dpkg lock.."; sleep 1; done' >> connect_and_install.sh &&
         echo "wget 'https://iotcompanionapp.blob.core.windows.net/scripts/sendip_and_install.sh'" >> connect_and_install.sh &&
         echo 'sh sendip_and_install.sh $1 $2 $3 $6 $7 $8' >> connect_and_install.sh &&
         sudo bash -c 'sh connect_and_install.sh "${hubConnectionString}" "${deviceId}" "${connectionString}" "${this.state.ssid}" "${this.state.passphrase}" "${registryName}" "${registryUser}" "${registryPass}" </dev/null >connect.log 2>&1 &'
