@@ -16,7 +16,7 @@ For Android devices and Windows, if you have a work or school account, the quick
 - Unpack the zip file
 - Run the PowerShell script: `./Add-AppDevPackage.ps`
 
-## Running Locally
+## Getting Started
 
 #### Install tools for your OS
 - Install Git: https://git-scm.com
