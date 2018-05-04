@@ -12,7 +12,7 @@ For Android devices and Windows, if you have a work or school account, the quick
 
 ### Windows
 - Enable "Developer mode" in Settings -> Update & Security -> For Developers
-- Download the zip file from [here](https://rink.hockeyapp.net/apps/9d049d0ef27c462aba7a3db3afc5d797)
+- Download the zip file from [here](https://rink.hockeyapp.net/apps/3d31ebf256d445648f0f2a0855798ece)
 - Unpack the zip file
 - Run the PowerShell script: `./Add-AppDevPackage.ps`
 
