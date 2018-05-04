@@ -35,7 +35,7 @@ A video of how to setup the teXXmo IoT button is [here](https://iotcompanionapp.
 - Set the client ID in the code: `App > Services > AzureRestApi.js` and `App > Services > AzureRestApi.windows.js`
 
 ### Clone the react-native-sshclient repository
-- Clone the "react-native-sshclient" repository [https://github.com/Azure/react-native-sshclient](https://github.com/Azure/react-native-sshclient)
+- Clone the "react-native-sshclient" repository [https://github.com/Azure-Samples/react-native-sshclient](https://github.com/Azure-Samples/react-native-sshclient)
 - This "react-native-sshclient" repository folder should be at the same directory level as this repository:
 ```
 - Workspace Parent Folder
