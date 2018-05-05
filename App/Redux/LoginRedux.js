@@ -4,7 +4,7 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  login: ['username'],
+  login: ['username', 'tenant'],
   logout: null
 })
 
@@ -15,26 +15,28 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   loggedIn: false,
-  loggedInUser: null
+  loggedInUser: null,
+  loggedInTenant: null
 })
 
 /* ------------- Selectors ------------- */
 
 export const LoginSelectors = {
   getLoggedIn: state => state.loggedIn,
-  getLoggedInUser: state => state.loggedInUser
+  getLoggedInUser: state => state.loggedInUser,
+  getLoggedInTenant: state => state.loggedInTenant
 }
 
 /* ------------- Reducers ------------- */
 
 // successful login
-export const loginSuccess = (state, { username }) => {
-  return state.merge({ loggedIn: true, loggedInUser: username })
+export const loginSuccess = (state, { username, tenant }) => {
+  return state.merge({ loggedIn: true, loggedInUser: username, loggedInTenant: tenant })
 }
 
 // successful logout
 export const logoutSuccess = (state) => {
-  return state.merge({ loggedIn: false, loggedInUser: null })
+  return state.merge({ loggedIn: false, loggedInUser: null, loggedInTenant: null })
 }
 
 /* ------------- Hookup Reducers To Types ------------- */

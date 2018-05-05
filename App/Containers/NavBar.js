@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux'
 import LoginActions from '../Redux/LoginRedux'
 import SimpleButton from '../Components/SimpleButton'
@@ -12,15 +13,23 @@ class NavBar extends Component {
   logout = () => {
     logoutFromAzure().then(() => {
       this.props.logout()
-      this.props.navigation.navigate('LaunchScreen')
+      this.goHome()
     }).catch(error => console.log(error))
   }
 
   goHome = () => {
-    this.props.navigation.navigate('LaunchScreen')
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'LaunchScreen' })],
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   goBack = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.onBack) {
+      navParams.onBack();
+    }
     this.props.navigation.goBack()
   }
 

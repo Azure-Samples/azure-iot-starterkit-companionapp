@@ -18,5 +18,9 @@ export default StyleSheet.create({
   },
   centered: {
     alignItems: 'center'
+  },
+  hintText: {
+    fontSize: 14,
+    color: Colors.snow
   }
 })

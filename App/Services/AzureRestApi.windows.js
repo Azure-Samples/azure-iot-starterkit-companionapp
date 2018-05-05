@@ -2,13 +2,14 @@ import CryptoJS from 'crypto-js'
 import utf8 from 'utf8'
 import AuthenticationContext from 'react-native-ms-adal/msadal/AuthenticationContext'
 
-const authority = 'https://login.microsoftonline.com/common';
-const clientId = '973e038f-b479-4561-86a3-55215c2c09d5';
+const authority = 'https://login.microsoftonline.com';
+const clientId = '<YOUR_APPLICATION_ID>';
 const redirectUri = 'x-msauth-AzureIoTDevKitCompanion://com.microsoft.AzureIoTDevKitCompanion';
 const resourceUri = 'https://management.azure.com/';
 
 // URIs
 const subscriptionsUri = 'https://management.azure.com/subscriptions?api-version=2016-06-01';
+let currentTenant = null;
 
 function getDefaultOptions(accessToken, method, body) {
   return {
@@ -42,9 +43,18 @@ function getQueryString(params) {
   return keyValuePairs.join('&');
 }
 
+function getEndpoint() {
+  return `${authority}/${currentTenant || 'common'}`
+}
+
+export function setTenant(tenant) {
+  currentTenant = tenant;
+}
+
 export function interactiveLoginToAzure() {
+  const endpoint = getEndpoint()
   return new Promise(function (resolve, reject) {
-    let context = new AuthenticationContext(authority);
+    let context = new AuthenticationContext(endpoint);
     // We require user credentials, so this triggers the authentication dialog box
     context.acquireTokenAsync(resourceUri, clientId, redirectUri).then(
       function (authDetails) {
@@ -58,8 +68,9 @@ export function interactiveLoginToAzure() {
 }
 
 export function loginToAzure() {
+  const endpoint = getEndpoint()
   return new Promise(function (resolve, reject) {
-    let context = new AuthenticationContext(authority);
+    let context = new AuthenticationContext(endpoint);
     // Attempt to authorize the user silently
     context.acquireTokenSilentAsync(resourceUri, clientId).then(
       function (authDetails) {
@@ -81,9 +92,12 @@ export function loginToAzure() {
 }
 
 export function logoutFromAzure() {
-  const context = new AuthenticationContext(authority);
-  const uri = `https://login.windows.net/common/oauth2/logout?post_logout_redirect_uri=${redirectUri}`;
-  return fetch(uri).then(response => true);
+  const endpoint = getEndpoint()
+  const uri = `${endpoint}/oauth2/logout?post_logout_redirect_uri=${redirectUri}`
+  return fetch(uri).then(response => {
+    currentTenant = null;
+    return response;
+  });
 }
 
 function callApiWithLogin(uri, method, body) {
@@ -95,7 +109,15 @@ function callApiWithLogin(uri, method, body) {
 function callApi(uri, accessToken, method, body) {
   const options = getDefaultOptions(accessToken, method, body);
   return fetch(uri, options)
-    .then(response => response ? response.json(response) : '')
+    .then(async (response) => {
+      if (response.status >= 400) {
+        const body = await response.json();
+        const message = body.error && body.error.message;
+        throw new Error(message)
+      }
+
+      return response ? response.json(response) : '';
+    })
     .then(results => {
       if (results && results.value) {
         return results.value;
@@ -127,7 +149,16 @@ export function createResourceGroup(subscriptionId, name, location) {
 export function checkResourceGroupNameAvailability(subscriptionId, name) {
   // return 204 if found, 404 otherwise
   const uri = `https://management.azure.com/subscriptions/${subscriptionId}/resourcegroups/${name}?api-version=2017-05-10`;
-  return callApiWithLogin(uri, 'HEAD');
+
+  return loginToAzure().then(authDetails => {
+    const options = getDefaultOptions(authDetails.accessToken, 'HEAD');
+    return fetch(uri, options)
+      .then(response => {
+        return {
+          nameAvailable: response.status === 404
+        };
+      })
+  });
 }
 
 export function getHubs(subscriptionId) {
@@ -172,7 +203,8 @@ export function createHub(subscriptionId, resourceGroup, hubName, location, sku)
 
       if (response.status >= 400) {
         const body = await response.json();
-        throw new Error(body.message || 'Error creating IoT hub')
+        const message = body.Message || body.error && body.error.message;
+        throw new Error(message || 'Error creating IoT hub')
       }
 
       if (response.status === 201) {
@@ -436,6 +468,12 @@ export async function createStorageAccount(subscriptionId, resourceGroup, name, 
     const options = getDefaultOptions(authDetails.accessToken, 'PUT', body);
     return fetch(uri, options)
       .then(async (response) => {
+        if (response.status >= 400) {
+          const body = await response.json();
+          const message = body.error && body.error.message;
+          throw new Error(message || 'Error creating storage account')
+        }
+
         if (response.status === 202) {
           let waiting = true;
           while (waiting) {
@@ -502,6 +540,12 @@ export async function createSourceControl(subscriptionId, resourceGroup, name, r
     const options = getDefaultOptions(authDetails.accessToken, 'PUT', body);
     return fetch(uri, options)
       .then(async (response) => {
+        if (response.status >= 400) {
+          const body = await response.json();
+          const message = body.error && body.error.message;
+          throw new Error(message || 'Error creating source control')
+        }
+
         if (response.status === 201) {
           let waiting = true;
           while (waiting) {
@@ -556,6 +600,12 @@ export async function createFunctionApp(subscriptionId, resourceGroup, name, loc
     const options = getDefaultOptions(authDetails.accessToken, 'PUT', body);
     return fetch(uri, options)
       .then(async (response) => {
+        if (response.status >= 400) {
+          const body = await response.json();
+          const message = body.error && body.error.message;
+          throw new Error(message || 'Error creating function app')
+        }
+
         if (response.status === 202) {
           let waiting = true;
           while (waiting) {

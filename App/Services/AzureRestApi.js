@@ -3,13 +3,14 @@ import utf8 from 'utf8'
 import { MSAdalLogin, MSAdalLogout } from 'react-native-ms-adal'
 import CookieManager from 'react-native-cookies';
 
-const authority = 'https://login.microsoftonline.com/common';
-const clientId = '973e038f-b479-4561-86a3-55215c2c09d5';
+const authority = 'https://login.microsoftonline.com';
+const clientId = '<YOUR_APPLICATION_ID>';
 const redirectUri = 'x-msauth-AzureIoTDevKitCompanion://com.microsoft.AzureIoTDevKitCompanion';
 const resourceUri = 'https://management.azure.com/';
 
 // URIs
 const subscriptionsUri = 'https://management.azure.com/subscriptions?api-version=2016-06-01';
+let currentTenant = null;
 
 function getDefaultOptions(accessToken, method, body) {
   return {
@@ -43,18 +44,30 @@ function getQueryString(params) {
   return keyValuePairs.join('&');
 }
 
+function getEndpoint() {
+  return `${authority}/${currentTenant || 'common'}`
+}
+
+export function setTenant(tenant) {
+  currentTenant = tenant;
+}
+
 export function interactiveLoginToAzure() {
-  return MSAdalLogin(authority, clientId, redirectUri, resourceUri)
+  const endpoint = getEndpoint()
+  return MSAdalLogin(endpoint, clientId, redirectUri, resourceUri)
 }
 
 export function loginToAzure() {
-  return MSAdalLogin(authority, clientId, redirectUri, resourceUri)
+  const endpoint = getEndpoint()
+  return MSAdalLogin(endpoint, clientId, redirectUri, resourceUri)
 }
 
 export function logoutFromAzure() {
-  return MSAdalLogout(authority, redirectUri)
+  const endpoint = getEndpoint()
+  return MSAdalLogout(endpoint, redirectUri)
     .then(response => {
       CookieManager.clearAll();
+      currentTenant = null;
       return response;
     })
 }
@@ -68,7 +81,15 @@ function callApiWithLogin(uri, method, body) {
 function callApi(uri, accessToken, method, body) {
   const options = getDefaultOptions(accessToken, method, body);
   return fetch(uri, options)
-    .then(response => response ? response.json(response) : '')
+    .then(async (response) => {
+      if (response.status >= 400) {
+        const body = await response.json();
+        const message = body.error && body.error.message;
+        throw new Error(message)
+      }
+
+      return response ? response.json(response) : '';
+    })
     .then(results => {
       if (results && results.value) {
         return results.value;
@@ -154,7 +175,7 @@ export function createHub(subscriptionId, resourceGroup, hubName, location, sku)
 
       if (response.status >= 400) {
         const body = await response.json();
-        const message = body.error && body.error.message;
+        const message = body.Message || body.error && body.error.message;
         throw new Error(message || 'Error creating IoT hub')
       }
 
@@ -419,6 +440,12 @@ export async function createStorageAccount(subscriptionId, resourceGroup, name, 
     const options = getDefaultOptions(authDetails.accessToken, 'PUT', body);
     return fetch(uri, options)
       .then(async (response) => {
+        if (response.status >= 400) {
+          const body = await response.json();
+          const message = body.error && body.error.message;
+          throw new Error(message || 'Error creating storage account')
+        }
+
         if (response.status === 202) {
           let waiting = true;
           while (waiting) {
@@ -485,6 +512,12 @@ export async function createSourceControl(subscriptionId, resourceGroup, name, r
     const options = getDefaultOptions(authDetails.accessToken, 'PUT', body);
     return fetch(uri, options)
       .then(async (response) => {
+        if (response.status >= 400) {
+          const body = await response.json();
+          const message = body.error && body.error.message;
+          throw new Error(message || 'Error creating source control')
+        }
+
         if (response.status === 201) {
           let waiting = true;
           while (waiting) {
@@ -539,6 +572,12 @@ export async function createFunctionApp(subscriptionId, resourceGroup, name, loc
     const options = getDefaultOptions(authDetails.accessToken, 'PUT', body);
     return fetch(uri, options)
       .then(async (response) => {
+        if (response.status >= 400) {
+          const body = await response.json();
+          const message = body.error && body.error.message;
+          throw new Error(message || 'Error creating function app')
+        }
+
         if (response.status === 202) {
           let waiting = true;
           while (waiting) {

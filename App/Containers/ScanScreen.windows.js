@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import NavBar from './NavBar'
 
@@ -8,7 +9,11 @@ import styles from './Styles/ScanScreenStyle'
 
 class ScanScreen extends Component {
   openHome = () => {
-    this.props.navigation.navigate('LaunchScreen')
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'LaunchScreen' })],
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   openMetadata = () => {
