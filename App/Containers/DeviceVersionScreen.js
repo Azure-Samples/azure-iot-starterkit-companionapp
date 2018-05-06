@@ -16,10 +16,6 @@ class DeviceVersionScreen extends Component {
     this.props.navigation.navigate('SetupScreen', screenParams)
   }
 
-  openLaunchScreen = () => {
-    this.props.navigation.navigate('LaunchScreen')
-  }
-
   render() {
     return (
       <View style={styles.mainContainer}>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import SSH from 'react-native-ssh'
 import { connect } from 'react-redux'
 import PasswordInput from '../Components/PasswordInput'
@@ -19,7 +20,11 @@ class SetPasswordScreen extends Component {
   }
 
   openHome = () => {
-    this.props.navigation.navigate('LaunchScreen')
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'LaunchScreen' })],
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   setPassword = () => {

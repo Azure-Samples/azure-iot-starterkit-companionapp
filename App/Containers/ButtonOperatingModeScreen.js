@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native'
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux'
 import { getDeviceTwin } from '../Services/AzureRestApi'
 import NavBar from './NavBar'
@@ -76,7 +77,11 @@ class ButtonOperatingModeScreen extends Component {
 
   openHome = () => {
     this.setState({ ...this.state, connecting: false, retries: 0 }, () => {
-      this.props.navigation.navigate('LaunchScreen')
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'LaunchScreen' })],
+      });
+      this.props.navigation.dispatch(resetAction);
     })
   }
 

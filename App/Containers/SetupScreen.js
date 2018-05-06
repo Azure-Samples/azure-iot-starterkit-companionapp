@@ -63,9 +63,7 @@ class SetupScreen extends Component {
   }
 
   componentDidMount = () => {
-    if (this.props.subscriptions.length === 0) {
-      this.setState({ ...this.state, loadingResources: true }, this.loadResources)
-    }
+    this.setState({ ...this.state, loadingResources: true }, this.loadResources)
   }
 
   loadResources = () => {
@@ -74,28 +72,20 @@ class SetupScreen extends Component {
         this.props.setSubscriptions(subscriptions)
 
         if (subscriptions && subscriptions.length > 0) {
-          const subscriptionId = subscriptions[0].subscriptionId
-          getHubs(subscriptionId).then(hubs => {
-            this.props.setIotHubs(subscriptionId, hubs)
-          })
-          getResourceGroups(subscriptionId).then(resourceGroups => {
-            this.props.setResourceGroups(subscriptionId, resourceGroups)
-          })
-          getIoTHubLocations(subscriptionId).then(locations => {
-            this.props.setLocations(subscriptionId, locations)
-          })
+          const subscription = this.state.subscription || subscriptions[0].subscriptionId;
+          this.setSubscription(subscription)
         }
-
-        this.setState({ ...this.state, loadingResources: false })
       })
   }
 
   setSubscription = (value) => {
-    this.setState({ ...this.state, subscription: value }, () => {
-      this.updateLocations(value)
-      this.updateHubs(value)
-      this.updateResourceGroups(value)
-      this.updateRegistries(value)
+    this.setState({ ...this.state, subscription: value }, async () => {
+      await this.updateLocations(value)
+      await this.updateHubs(value)
+      await this.updateResourceGroups(value)
+      await this.updateRegistries(value)
+
+      this.setState({ ...this.state, loadingResources: false })
     })
   }
 
@@ -544,6 +534,10 @@ class SetupScreen extends Component {
     })
   }
 
+  refresh = () => {
+    this.setState({ ...this.state, loadingResources: true }, this.loadResources)
+  }
+
   openConnectScreen = (details) => {
     const nextScreen = details.deviceDetails.isIoTButton ? 'ButtonConfigModeScreen' : 'WifiConnectScreen';
     this.props.navigation.navigate(nextScreen, details)
@@ -605,6 +599,11 @@ class SetupScreen extends Component {
         </ScrollView>
         <View>
           {!this.state.loadingResources && !this.state.registering && <View style={styles.navigationContainer}>
+            <View style={styles.navigationButtonContainer}>
+              <TouchableOpacity style={[styles.navigationButton, styles.backButton]} onPress={this.refresh}>
+                <Text style={styles.navigationButtonText}>REFRESH</Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.navigationButtonContainer}>
               <TouchableOpacity style={[styles.navigationButton, styles.nextButton]} onPress={this.startRegister}>
                 <Text style={styles.navigationButtonText}>NEXT</Text>
